@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using SC.DevChallenge.Api.Data;
 
 namespace SC.DevChallenge.Api
 {
@@ -21,6 +23,9 @@ namespace SC.DevChallenge.Api
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SC.DevChallenge.Api", Version = "v1" })
             );
+
+            services.AddDbContext<SCDevChallengeApiContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SCDevChallengeApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
