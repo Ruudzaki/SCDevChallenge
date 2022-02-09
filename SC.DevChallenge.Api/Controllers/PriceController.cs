@@ -12,31 +12,26 @@ namespace SC.DevChallenge.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PricesController : ControllerBase
+    public class PriceController : ControllerBase
     {
         private readonly SCDevChallengeApiContext _context;
 
-        public PricesController(SCDevChallengeApiContext context)
+        public PriceController(SCDevChallengeApiContext context)
         {
             _context = context;
         }
 
-        // GET: api/Prices
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Prices>>> GetPrices()
+        // GET: api/Price
+        [HttpGet("price")]
+        public async Task<ActionResult<InstrumentPrice>> GetPrice(int id)
         {
-            return await _context.Prices.ToListAsync();
+            return await _context.Prices.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         [HttpGet("average")]
         public string Average()
         {
-            return "I'm dummy controller";
-        }
-
-        private bool PricesExists(int id)
-        {
-            return _context.Prices.Any(e => e.Id == id);
+            return $"I'm dummy controller. There are {_context.Prices.Count()} price records";
         }
     }
 }

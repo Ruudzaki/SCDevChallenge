@@ -25,7 +25,7 @@ namespace SC.DevChallenge.Api
             );
 
             services.AddDbContext<SCDevChallengeApiContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SCDevChallengeApiContext")));
+                    options.UseInMemoryDatabase(Configuration.GetConnectionString("SCDevChallengeApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +35,15 @@ namespace SC.DevChallenge.Api
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SC.DevChallenge.Api v1"));
+            }
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                var context = services.GetRequiredService<SCDevChallengeApiContext>();
+               // context.Database.EnsureCreated();
+                DBInitializer.Seed(context);
             }
 
             app.UseRouting();

@@ -14,6 +14,6 @@ namespace SC.DevChallenge.Api.Data
         {
         }
 
-        public DbSet<SC.DevChallenge.Api.Models.Prices> Prices { get; set; }
+        public DbSet<InstrumentPrice> Prices { get; set; }
     }
 }
