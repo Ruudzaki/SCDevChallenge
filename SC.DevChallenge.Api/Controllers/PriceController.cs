@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SC.DevChallenge.Api.Application;
 using SC.DevChallenge.Api.Data;
 using SC.DevChallenge.Api.Models;
 
 namespace SC.DevChallenge.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/prices")]
     [ApiController]
     public class PriceController : ControllerBase
     {
@@ -29,9 +30,32 @@ namespace SC.DevChallenge.Api.Controllers
         }
 
         [HttpGet("average")]
-        public string Average()
+        public async Task<ActionResult<AveragePriceViewModel>> Average(string portfolio, string owner, string instrument,
+            DateTime? date = null)
         {
-            return $"I'm dummy controller. There are {_context.Prices.Count()} price records";
+            if (date != null)
+            {
+                var averagePrice = new Calculator(_context).CalculateAveragePrice(portfolio, owner, instrument, (DateTime) date);
+                var averagePriceViewModel = new AveragePriceViewModel()
+                {
+                    Price = averagePrice.Average,
+                    Date = averagePrice.StartDate
+                };
+
+                return averagePriceViewModel;
+            }
+            else
+            {
+                var averagePrice = new Calculator(_context).CalculateAveragePrice(portfolio, owner, instrument);
+                var averagePriceViewModel = new AveragePriceViewModel()
+                {
+                    Price = averagePrice.Average,
+                    Date = averagePrice.StartDate
+                };
+
+                return averagePriceViewModel;
+
+            }
         }
     }
 }

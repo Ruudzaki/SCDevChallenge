@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,13 +15,20 @@ namespace SC.DevChallenge.Api.Data
 
         public static void Seed(SCDevChallengeApiContext context)
         {
-            using (var reader = new StreamReader("Input\\data.csv"))
+            using (var reader = new StreamReader("Input/data.csv"))
             using (var csv = new CsvReader(reader, CultureInfo.GetCultureInfo("en-AU")))
             {
                 csv.Context.RegisterClassMap<InstrumentPriceMap>();
-                var records = csv.GetRecords<InstrumentPrice>();
-                context.Prices.AddRange(records);
-                context.SaveChanges();
+                try
+                {
+                    var records = csv.GetRecords<InstrumentPrice>();
+                    context.Prices.AddRange(records);
+                    context.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Data file wasn't found", e);
+                }
             }
         }
     }
