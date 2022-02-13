@@ -24,9 +24,9 @@ namespace SC.DevChallenge.Api.Application
             var endPeriodDate = _utills.TimeSlotToDateTime(++timeSlot);
 
             var prices = _context.Prices.Where(
-                p => p.Portfolio.Equals(portfolio)
-                     && p.Instrument.Equals(instrument)
-                     && p.Owner.Equals(owner)
+                p => p.Portfolio.Equals(portfolio, StringComparison.CurrentCultureIgnoreCase)
+                     && p.Instrument.Equals(instrument, StringComparison.CurrentCultureIgnoreCase)
+                     && p.Owner.Equals(owner, StringComparison.CurrentCultureIgnoreCase)
                      && p.Date >= startPeriodDate
                      && p.Date < endPeriodDate);
 
