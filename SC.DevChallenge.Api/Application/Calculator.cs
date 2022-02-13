@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SC.DevChallenge.Api.Data;
+using SC.DevChallenge.Api.Models;
 
 namespace SC.DevChallenge.Api.Application
 {
@@ -30,18 +32,7 @@ namespace SC.DevChallenge.Api.Application
                      && p.Date >= startPeriodDate
                      && p.Date < endPeriodDate);
 
-            double totalPrice = 0;
-            double average = 0;
-
-            if (prices.Count() != 0)
-            {
-                foreach (var price in prices)
-                {
-                    totalPrice += price.Price;
-                }
-                average = totalPrice / prices.Count();
-            }
-
+            var average = Average(prices);
 
             return (average, startPeriodDate);
         }
@@ -53,6 +44,13 @@ namespace SC.DevChallenge.Api.Application
                      && p.Instrument.Equals(instrument)
                      && p.Owner.Equals(owner));
 
+            var average = Average(prices);
+            
+            return (average, _utills.InitDateTime);
+        }
+
+        private double Average(IQueryable<InstrumentPrice> prices)
+        {
             double totalPrice = 0;
             double average = 0;
 
@@ -62,11 +60,11 @@ namespace SC.DevChallenge.Api.Application
                 {
                     totalPrice += price.Price;
                 }
+
                 average = totalPrice / prices.Count();
             }
 
-
-            return (average, _utills.InitDateTime);
+            return average;
         }
     }
 }
